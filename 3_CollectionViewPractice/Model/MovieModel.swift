@@ -5,8 +5,9 @@
 //  Created by Vicki Yang on 2022/9/25.
 //
 
-struct MovieModel {
-    let title: String
-    let image: String
-    let url: String
+struct MovieModel: Decodable {
+    let title   : String
+    let time    : String
+    let info    : String
+    let url     : String
 }

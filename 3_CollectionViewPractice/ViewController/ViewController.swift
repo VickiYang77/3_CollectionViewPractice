@@ -12,14 +12,15 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     @IBOutlet weak var typeCollectionView: UICollectionView!
     @IBOutlet weak var picWallCollectionView: UICollectionView!
     var viewModel = ViewModel()
-    var currentMovieInfo: [MovieModel] = []
+    var moviesInfo: [MovieModel] = []
+    var currentTopic = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTypeCollectionView()
         setupPicWallCollectionView()
         
-        currentMovieInfo = viewModel.getMovieInfo()
+        moviesInfo = viewModel.getMovieInfo()
     }
     
     func setupTypeCollectionView() {
@@ -55,28 +56,41 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return currentMovieInfo.count
+        return collectionView.tag == 0 ? moviesInfo.count : 3 * 10
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch collectionView {
         case typeCollectionView:
             if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: typeCollectionViewCell.identifier, for: indexPath) as? typeCollectionViewCell,
-               self.currentMovieInfo.count > indexPath.row {
-                let movie = self.currentMovieInfo[indexPath.row]
-                cell.setup(title: movie.title, image: movie.image)
+               self.moviesInfo.count > indexPath.row {
+                let movie = self.moviesInfo[indexPath.row]
+                let randomInt = Int.random(in: 1...8)
+                let imageName = movie.title + "_0\(randomInt)"
+                cell.setup(title: movie.title, image: imageName)
                 return cell
             }
         default:
-            if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: picWallCollectionViewCell.identifier, for: indexPath) as? picWallCollectionViewCell,
-               self.currentMovieInfo.count > indexPath.row {
-                let movie = self.currentMovieInfo[indexPath.row]
-                cell.setup(image: movie.image)
+            if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: picWallCollectionViewCell.identifier, for: indexPath) as? picWallCollectionViewCell {
+                let movie = self.moviesInfo[currentTopic]
+                let randomInt = Int.random(in: 1...8)
+                let imageName = movie.title + "_0\(randomInt)"
+                cell.setup(image: imageName)
                 return cell
             }
         }
         
         return UICollectionViewCell()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        switch collectionView.tag {
+        case 0:
+            currentTopic = indexPath.row
+            picWallCollectionView.reloadData()
+        default:
+            break
+        }
     }
 }
 
