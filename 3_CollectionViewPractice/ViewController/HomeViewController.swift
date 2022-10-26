@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  HomeViewController.swift
 //  3_CollectionViewPractice
 //
 //  Created by Vicki Yang on 2022/9/22.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+class HomeViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
     @IBOutlet weak var typeCollectionView: UICollectionView!
     @IBOutlet weak var picWallCollectionView: UICollectionView!
@@ -89,14 +89,25 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             currentTopic = indexPath.row
             picWallCollectionView.reloadData()
         default:
+            let detailVC = DetailViewController()
+            detailVC.title = "Detail"
+            self.navigationController?.pushViewController(detailVC, animated: true)
             break
         }
     }
 }
 
-extension ViewController {
+extension HomeViewController {
     // 禁止橫向
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
+    }
+}
+
+class DetailViewController: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.title = "Detail"
+        self.view.backgroundColor = .cyan
     }
 }
